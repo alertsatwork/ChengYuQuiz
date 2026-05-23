@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>成语练习 1–250</title>
+<style>
+:root{--r:#6b63b5;--g:#3B6D11;--gd:#534AB7;--ink:#2a2640;--bg:#f4f3f8;--card:#fff;--br:#cbc8e8;--mu:#6b6888;--rlight:#f0effa;--rhover:#e8e6f5;--fs:1;}
+body.dark{--r:#9b96d4;--g:#6abf5e;--gd:#a89fe8;--ink:#e8e4f8;--bg:#1a1828;--card:#252338;--br:#3d3860;--mu:#9490b8;--rlight:#2a2645;--rhover:#2e2a4a;}
+body.dark header{border-bottom-color:var(--br);}
+body.dark .opt.correct{background:#1a3a1a;color:#6abf5e;}
+body.dark .opt.wrong{background:#2a2640;color:#9b96d4;}
+body.dark .feedback.ok{background:#1a3a1a;border-color:#4a8a4a;}
+body.dark .feedback.err{background:#2a2640;border-color:#6b63b5;}
+body.dark #fill-in{color:var(--ink);}
+body{font-size:calc(16px * var(--fs));}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--ink);padding:14px;min-height:100vh;font-size:calc(15px * var(--fs));transition:background .25s,color .25s;}
+header{text-align:center;padding:18px 14px 14px;border-bottom:2px solid var(--r);margin-bottom:16px;position:relative;}
+.header-controls-right{position:absolute;top:14px;right:14px;display:flex;gap:8px;align-items:center;}.header-controls-left{position:absolute;top:14px;left:14px;display:flex;gap:8px;align-items:center;}
+.hdr-btn{background:none;border:1.5px solid var(--br);border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;color:var(--mu);transition:all .15s;line-height:1;}
+.hdr-btn:hover{border-color:var(--r);color:var(--r);}
+.hdr-btn.active{border-color:var(--r);background:var(--r);color:#fff;}
+h1{font-size:clamp(20px,5vw,28px);color:var(--r);letter-spacing:2px;}
+header p{font-size:14px;color:var(--mu);margin-top:5px;}
+.card{background:var(--card);border:1px solid var(--br);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(107,99,181,.08);}
+.card h2{font-size:16px;margin-bottom:14px;}
+.set-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.set-cb{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:2px solid var(--br);border-radius:8px;background:var(--bg);cursor:pointer;transition:border-color .15s,background .15s;line-height:1.4;}
+.set-cb:hover{border-color:var(--r);background:var(--rhover);}
+.set-cb input[type=checkbox]{width:18px;height:18px;min-width:18px;accent-color:var(--r);cursor:pointer;margin-top:3px;}
+.set-cb span{font-size:calc(15px * var(--fs));color:var(--ink);font-weight:500;}
+.set-cb small{display:block;font-size:12px;color:var(--mu);font-weight:400;margin-top:1px;}
+.set-cb input:checked ~ span{color:var(--r);}
+.set-cb.all-cb{grid-column:span 2;background:var(--rlight);}
+.set-cb.all-cb input:checked ~ span{color:var(--r);}
+.type-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.type-chip{padding:6px 13px;border:1px solid var(--br);border-radius:20px;font-size:13px;cursor:pointer;background:var(--bg);transition:all .15s;}
+.type-chip.active{background:var(--gd);border-color:var(--gd);color:#fff;font-weight:600;}
+.type-checks{display:flex;flex-direction:column;gap:10px;}
+.type-check{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1.5px solid var(--br);border-radius:10px;cursor:pointer;background:var(--bg);transition:border-color .15s,background .15s;}
+.type-check:hover{border-color:var(--r);background:var(--rhover);}
+.type-check input[type=checkbox]{width:20px;height:20px;min-width:20px;accent-color:var(--r);cursor:pointer;margin-top:2px;}
+.type-check span{font-size:calc(16px * var(--fs));color:var(--ink);line-height:1.4;}
+.type-check small{display:block;font-size:13px;color:var(--mu);margin-top:2px;}
+.type-check input:checked ~ span{color:var(--r);font-weight:600;}
+#start-btn{width:100%;padding:14px;background:var(--r);color:#fff;border:none;border-radius:10px;font-size:16px;letter-spacing:2px;cursor:pointer;}
+#start-btn:disabled{opacity:.4;cursor:not-allowed;}
+#quiz-area{display:none;}
+.score-live{font-size:14px;color:var(--r);font-weight:600;text-align:right;margin-bottom:4px;}
+.prog-text{font-size:13px;color:var(--mu);text-align:right;margin-bottom:6px;}
+.prog-wrap{background:var(--br);border-radius:4px;height:6px;margin-bottom:14px;overflow:hidden;}
+.prog-bar{height:100%;background:var(--r);border-radius:4px;transition:width .3s;}
+.q-label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--gd);font-weight:600;margin-bottom:10px;}
+.q-text{font-size:clamp(calc(16px * var(--fs)),4vw,calc(19px * var(--fs)));line-height:1.8;margin-bottom:14px;white-space:pre-wrap;}
+.hint-btn{font-size:13px;color:var(--r);background:none;border:none;cursor:pointer;text-decoration:underline;display:none;margin-bottom:10px;}
+.pinyin{font-size:14px;color:var(--mu);font-style:italic;margin-bottom:10px;display:none;}
+.opts{display:flex;flex-direction:column;gap:9px;}
+.opt{width:100%;padding:12px 15px;text-align:left;border:1.5px solid var(--br);border-radius:10px;background:var(--bg);font-size:calc(15px * var(--fs));line-height:1.5;cursor:pointer;transition:border-color .15s,background .15s;}
+.opt:hover:not(:disabled){border-color:var(--r);background:var(--rhover);}
+.opt.correct{border-color:var(--g);background:#eaf3de;color:#27500A;font-weight:600;}
+.opt.wrong{border-color:#9b96d4;background:#f0effa;color:#3d366e;}
+.opt:disabled{cursor:default;}
+#fill-in{width:100%;padding:12px 15px;font-size:calc(17px * var(--fs));border:1.5px solid var(--br);border-radius:10px;background:var(--bg);color:var(--ink);outline:none;margin-bottom:9px;display:none;}
+#fill-in:focus{border-color:var(--r);}
+#submit-btn{width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-size:calc(15px * var(--fs));cursor:pointer;display:none;}
+.feedback{border-radius:10px;padding:15px;margin-top:12px;font-size:calc(14px * var(--fs));line-height:1.8;display:none;}
+.feedback.ok{background:#eaf3de;border:1px solid #97c459;}
+.feedback.err{background:var(--rlight);border:1px solid #9b96d4;}
+.streak-banner{color:#fff;font-weight:700;border-radius:10px;padding:10px 14px;margin-bottom:10px;text-align:center;transform-origin:center;}
+@keyframes streak-pop{0%{transform:scale(.7) rotate(-3deg);opacity:0;}60%{transform:scale(1.08) rotate(1deg);}100%{transform:scale(1) rotate(0deg);opacity:1;}}
+@keyframes streak-shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-4px) rotate(-1deg);}40%{transform:translateX(4px) rotate(1deg);}60%{transform:translateX(-3px);}80%{transform:translateX(3px);}}
+@keyframes streak-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+@keyframes streak-glow{0%,100%{box-shadow:0 0 8px rgba(107,99,181,.4);}50%{box-shadow:0 0 22px rgba(107,99,181,.9);}}
+.fb-h{font-weight:700;font-size:calc(16px * var(--fs));margin-bottom:6px;}
+.fb-encourage{font-size:14px;margin-bottom:8px;font-style:italic;}
+.fb-ch{font-size:calc(20px * var(--fs));margin-bottom:3px;font-weight:600;}
+.fb-py{font-size:13px;color:var(--mu);font-style:italic;margin-bottom:4px;}
+.fb-m{color:var(--ink);font-size:calc(14px * var(--fs));margin-bottom:3px;}
+.fb-en{color:var(--mu);font-size:13px;margin-bottom:6px;}
+.fb-e{font-size:13px;margin-top:6px;color:#444;border-top:1px solid rgba(0,0,0,.08);padding-top:6px;}
+.fb-e-label{font-size:12px;color:var(--mu);font-weight:600;margin-bottom:2px;}
+#next-btn{width:100%;padding:13px;margin-top:12px;background:var(--r);color:#fff;border:none;border-radius:10px;font-size:calc(15px * var(--fs));cursor:pointer;display:none;}
+#score-screen{display:none;text-align:center;padding:24px 16px;}
+#score-screen h2{font-size:22px;color:var(--r);margin-bottom:8px;}
+.score-num{font-size:54px;font-weight:700;margin:14px 0;color:var(--r);}
+.score-num small{font-size:22px;color:var(--mu);}
+.score-msg{font-size:calc(15px * var(--fs));color:var(--ink);margin-bottom:18px;line-height:1.6;}
+.miss-list{text-align:left;margin-bottom:18px;}
+.miss-list h3{font-size:15px;font-weight:700;color:var(--r);margin-bottom:10px;}
+.miss-item{padding:10px 13px;background:var(--rlight);border-radius:8px;margin-bottom:6px;font-size:calc(14px * var(--fs));border-left:3px solid var(--r);}
+.miss-item b{font-size:calc(16px * var(--fs));}
+.act-btn{width:100%;padding:13px;border-radius:10px;font-size:15px;letter-spacing:1px;cursor:pointer;border:none;margin-bottom:8px;}
+.act-btn.primary{background:var(--r);color:#fff;}
+.act-btn.secondary{background:var(--bg);color:var(--ink);border:1.5px solid var(--br);}
+/* ── Glossary ── */
+#glossary-screen{display:none;padding-bottom:20px;}
+.glossary-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.glossary-header h2{font-size:20px;font-weight:700;flex:1;}
+.back-btn{background:none;border:1.5px solid var(--br);border-radius:8px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--ink);}
+.back-btn:hover{border-color:var(--r);color:var(--r);}
+.glossary-search{width:100%;padding:11px 14px;font-size:16px;border:1.5px solid var(--br);border-radius:10px;background:var(--card);color:var(--ink);outline:none;margin-bottom:12px;}
+.glossary-search:focus{border-color:var(--r);}
+.glossary-count{font-size:13px;color:var(--mu);margin-bottom:10px;}
+.flip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.flip-card{height:80px;cursor:pointer;perspective:600px;}
+.flip-card.tall{height:auto;min-height:80px;}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;width:100%;border-radius:10px;padding:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.flip-front{background:var(--card);border:1.5px solid var(--br);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;height:100%;}
+.flip-back{background:var(--rlight);border:1.5px solid var(--r);transform:rotateY(180deg);font-size:calc(13px * var(--fs));line-height:1.6;}
+.flip-ch{font-size:calc(20px * var(--fs));font-weight:700;color:var(--ink);}
+.flip-py-front{font-size:12px;color:var(--mu);margin-top:3px;}
+.flip-back-ch{font-size:calc(17px * var(--fs));font-weight:700;color:var(--r);margin-bottom:2px;}
+.flip-back-py{font-size:12px;color:var(--mu);font-style:italic;margin-bottom:6px;}
+.flip-back-m{color:var(--ink);font-size:calc(13px * var(--fs));margin-bottom:3px;}
+.flip-back-en{color:var(--mu);font-size:12px;margin-bottom:6px;}
+.flip-back-ex{font-size:12px;color:#555;border-top:1px solid var(--br);padding-top:6px;margin-top:4px;}
+.gloss-filter{margin-bottom:14px;}
+.gloss-filter-label{font-size:13px;color:var(--mu);font-weight:600;margin-bottom:8px;}
+/* ── Personal Best ── */
+</style>
+</head>
+<body>
+<header>
+  <div class="header-controls-left">
+    <button class="hdr-btn" id="home-top-btn" title="Home" style="display:none;">🏠</button>
+  </div>
+  <div class="header-controls-right">
+    <button class="hdr-btn" id="font-btn" title="Font size">Aa</button>
+    <button class="hdr-btn" id="dark-btn" title="Dark mode">🌙</button>
+  </div>
+  <h1>成语练习</h1><p>中学高级华文 · 250条必考成语</p>
+</header>
+
+<div id="home-screen">
+<div class="card">
+  <h2 style="font-size:20px;margin-bottom:16px;">选择练习范围</h2>
+  <div class="set-grid" id="set-grid">
+<label class="set-cb"><input type="checkbox" checked data-start="0" data-end="24"><span>第1–25条<small>爱屋及乌 → 城门失火</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="25" data-end="49"><span>第26–50条<small>痴人说梦 → 多多益善</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="50" data-end="74"><span>第51–75条<small>耳濡目染 → 光明正大</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="75" data-end="99"><span>第76–100条<small>海底捞针 → 近朱者赤</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="100" data-end="124"><span>第101–125条<small>惊弓之鸟 → 了如指掌</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="125" data-end="149"><span>第126–150条<small>临渴掘井 → 巧夺天工</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="150" data-end="174"><span>第151–175条<small>青红皂白 → 损人利己</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="175" data-end="199"><span>第176–200条<small>螳臂当车 → 乌烟瘴气</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="200" data-end="224"><span>第201–225条<small>无可厚非 → 以卵击石</small></span></label>
+<label class="set-cb"><input type="checkbox" data-start="225" data-end="249"><span>第226–250条<small>以身作则 → 坐享其成</small></span></label>
+<label class="set-cb all-cb"><input type="checkbox" id="all-sets-cb"><span>全部 1–250条 🎲<small>所有成语混合练习</small></span></label>
+  </div>
+  <div style="margin-bottom:18px;">
+    <div style="font-size:17px;color:var(--ink);margin-bottom:12px;font-weight:600;">题型 Question types</div>
+    <div class="type-checks" id="type-row">
+      <label class="type-check"><input type="checkbox" checked data-type="mc-meaning"><span>选择：词义<small>Choose the meaning</small></span></label>
+      <label class="type-check"><input type="checkbox" checked data-type="mc-usage"><span>选择：正确用法<small>Choose correct usage</small></span></label>
+      <label class="type-check"><input type="checkbox" data-type="fill-blank"><span>情境填空<small>Fill in the blank</small></span></label>
+      <label class="type-check"><input type="checkbox" checked data-type="mc-english"><span>英文配对<small>Match English → idiom</small></span></label>
+      <label class="type-check"><input type="checkbox" checked data-type="mc-confusable"><span>辨析易混淆成语<small>Distinguish similar idioms</small></span></label>
+      <label class="type-check"><input type="checkbox" data-type="story-fill"><span>情景故事填空<small>Story context fill-in</small></span></label>
+    </div>
+  </div>
+  <button id="start-btn">开始练习 ▶</button>
+  <button id="glossary-btn" style="width:100%;margin-top:8px;padding:12px;background:none;border:1.5px solid var(--br);border-radius:10px;font-size:15px;cursor:pointer;color:var(--mu);">📖 词汇表 Glossary (250条)</button>
+</div>
+</div>
+
+<div id="quiz-area">
+<div class="score-live" id="score-live"></div>
+<div class="prog-text" id="prog-text"></div>
+<div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
+<div class="card">
+  <div class="q-label" id="q-label"></div>
+  <div class="q-text" id="q-text"></div>
+  <button class="hint-btn" id="hint-btn">显示拼音提示</button>
+  <div class="pinyin" id="pinyin"></div>
+  <div class="opts" id="opts"></div>
+  <input class="fill-in" id="fill-in" type="text" placeholder="请输入成语">
+  <button id="submit-btn">提交答案</button>
+  <div class="feedback" id="feedback"></div>
+  <button id="next-btn">下一题 →</button>
+</div>
+</div>
+
+<div id="score-screen">
+<div class="card">
+  <h2>练习完成！</h2>
+      <div class="pb-item"><div class="pb-num" id="pb-pct">—</div><div class="pb-lbl">最高正确率 Best %</div></div>
+      <div class="pb-item"><div class="pb-num" id="pb-streak">—</div><div class="pb-lbl">最长连对 Best streak</div></div>
+      <div id="pb-new-badge" style="display:none"><span class="pb-new">🎉 New Best!</span></div>
+    </div>
+  </div>
+  <div class="score-num" id="score-num"></div>
+  <div class="score-msg" id="score-msg"></div>
+  <div class="miss-list" id="miss-list"></div>
+  <button class="act-btn primary" id="weak-btn" style="display:none;background:linear-gradient(135deg,#ef4444,#6b63b5);">🎯 练习弱点 Weak spots</button>
+  <button class="act-btn secondary" id="home-btn" style="display:none;">返回主页 Home</button>
+</div>
+</div>
+
+<script>
+const IDIOMS = [{"id":1,"ch":"爱屋及乌","py":"ài wū jí wū","meaning":"因为爱一个人而连带地关心到与他有关的人或物","en":"Love everything related to somebody","example":"爸爸深爱妈妈，因此把妈妈的亲友当作自己的亲友看待，真是爱屋及乌。"},{"id":2,"ch":"按部就班","py":"àn bù jiù bān","meaning":"按照一定的步骤和次序行事，缺乏创新精神","en":"Follow the prescribed order","example":"我们办事应该按部就班，不可以总想着一步登天，急于求成。"},{"id":3,"ch":"百年树人","py":"bǎi nián shù rén","meaning":"比喻培养人才是长久之计，也表示培养人才很不容易","en":"Nurturing people is difficult and takes a long time","example":"正所谓十年树木、百年树人，我们应该为未来打算，将培养人才这件大事做好。"},{"id":4,"ch":"百折不挠","py":"bǎi zhé bù náo","meaning":"无论受到多少次挫折，毫不动摇退缩","en":"Undaunted by multiple setbacks","example":"爱迪生百折不挠，愈挫愈勇，终于找到了合适的灯丝材料。"},{"id":5,"ch":"班门弄斧","py":"bān mén nòng fǔ","meaning":"在行家面前卖弄本领，也可用来表示谦虚","en":"Display skill in front of a professional","example":"在座各位都是鼎鼎大名的作家，而要在这里发言，真的是班门弄斧。"},{"id":6,"ch":"半途而废","py":"bàn tú ér fèi","meaning":"指做事不能坚持到底，中途停顿，有始无终","en":"Give up half way","example":"无论做什么事，都应持之以恒，若半途而废，永远不会成功。"},{"id":7,"ch":"杯弓蛇影","py":"bēi gōng shé yǐng","meaning":"比喻因疑神疑鬼而引起恐惧","en":"Extremely suspicious or paranoid","example":"看清楚，那只是块石头，不是炸弹，别杯弓蛇影，自己吓自己。"},{"id":8,"ch":"杯水车薪","py":"bēi shuǐ chē xīn","meaning":"比喻力量太小，解决不了问题","en":"Useless measure or attempt","example":"他那微薄的工资，对于全家庞大的开销简直是杯水车薪！"},{"id":9,"ch":"悲天悯人","py":"bēi tiān mǐn rén","meaning":"对混乱的时世感到悲伤，对人们的痛苦表示怜悯","en":"Pity state of mankind and universe","example":"这位宗教家具有悲天悯人的胸怀，一心一意要解救世间的苦难。"},{"id":10,"ch":"闭门造车","py":"bì mén zào chē","meaning":"比喻脱离实际，只凭主观办事","en":"Act blindly; cut oneself from others","example":"工作要联系实际，还要多与同事们交流，不能闭门造车。"},{"id":11,"ch":"兵不厌诈","py":"bīng bù yàn zhà","meaning":"用兵作战可以尽可能多用欺诈的战术迷惑对方","en":"Everything is fair in war","example":"兵不厌诈，诸葛亮摆空城计，就把强敌逼退了。"},{"id":12,"ch":"不耻下问","py":"bù chǐ xià wèn","meaning":"不以向知识比自己低的人请教为耻","en":"Do not be afraid to ask someone below","example":"在学习上，我们要有不耻下问的精神。"},{"id":13,"ch":"不二法门","py":"bù èr fǎ mén","meaning":"比喻最好的或独一无二的方法","en":"The only way","example":"努力学习是获取好成绩的不二法门。"},{"id":14,"ch":"不可救药","py":"bù kě jiù yào","meaning":"比喻已经到了无法挽救的地步","en":"Beyond cure; hopeless","example":"张大叔嗜赌如命，已经到了不可救药的地步了。"},{"id":15,"ch":"不劳而获","py":"bù láo ér huò","meaning":"自己不劳动而得到别人的劳动成果","en":"To benefit without hard work","example":"世上没有不劳而获的事，努力工作才能过上幸福的生活。"},{"id":16,"ch":"不胜枚举","py":"bù shèng méi jǔ","meaning":"形容数量很多，不能一个个地列举出来","en":"Too many to mention individually","example":"近几年游客投诉购物受骗的事件不胜枚举。"},{"id":17,"ch":"不务正业","py":"bù wù zhèng yè","meaning":"不做正当的事，也指放下本身的工作去做别的事","en":"Not attend to duties","example":"这些青年不务正业，你还是少跟他们来往，以免惹祸。"},{"id":18,"ch":"不翼而飞","py":"bù yì ér fēi","meaning":"比喻物品忽然失去，也比喻事情传播得很迅速","en":"To disappear without a trace","example":"我昨天明明把钱放在这里，现在却不翼而飞了。"},{"id":19,"ch":"不知所措","py":"bù zhī suǒ cuò","meaning":"不知道怎么办才好","en":"At one's wits end","example":"她被地震吓呆了，一时之间不知所措。"},{"id":20,"ch":"不自量力","py":"bù zì liàng lì","meaning":"指过高地估计自己的实力","en":"Overestimating capabilities","example":"你才懂得一点皮毛功夫就向武术大师挑战，未免太不自量力了吧！"},{"id":21,"ch":"沧海桑田","py":"cāng hǎi sāng tián","meaning":"比喻世事变化很大","en":"Significant changes over time","example":"几十年过去了，沧海桑田，新加坡已发生了翻天覆地的变化。"},{"id":22,"ch":"长年累月","py":"cháng nián lěi yuè","meaning":"形容经过了很长的时间","en":"Over the years","example":"他长年累月地辛苦工作，最后病倒了。"},{"id":23,"ch":"长袖善舞","py":"cháng xiù shàn wǔ","meaning":"形容有财势会手腕的人，善于钻营取巧","en":"Money and power helps in any occupation","example":"王老板生意做得很成功，是因为他长袖善舞，结识了许多政府高官。"},{"id":24,"ch":"草木皆兵","py":"cǎo mù jiē bīng","meaning":"形容人在惊慌时疑神疑鬼","en":"Extreme suspicion and fear","example":"发生危机后，民众闻恐色变，已然草木皆兵。"},{"id":25,"ch":"城门失火，殃及池鱼","py":"chéng mén shī huǒ yāng jí chí yú","meaning":"比喻因受连累而遭到损失或祸害","en":"Innocent people suffer from extraneous events","example":"他的投资失败连累家人受到损失，真是城门失火，殃及池鱼。"},{"id":26,"ch":"痴人说梦","py":"chī rén shuō mèng","meaning":"比喻说无根据的荒唐话","en":"Idiotic nonsense","example":"他每天什么都不做，却总说自己将来会成为亿万富豪，简直是痴人说梦。"},{"id":27,"ch":"持之以恒","py":"chí zhī yǐ héng","meaning":"长久坚持下去","en":"Persevere to the end","example":"学习要勤奋，持之以恒，这样才能获得好成绩。"},{"id":28,"ch":"出尔反尔","py":"chū ěr fǎn ěr","meaning":"指言而无信，言行前后自相矛盾","en":"Contradict oneself","example":"合同已经签定了，请双方遵守约定，不要出尔反尔。"},{"id":29,"ch":"出类拔萃","py":"chū lèi bá cuì","meaning":"超出同类之上，多指人的品德才能高出一般人","en":"To excel; surpass the common","example":"在电脑研究方面，刘博士是个出类拔萃的专家。"},{"id":30,"ch":"出人头地","py":"chū rén tóu dì","meaning":"超出别人之上成高人一等","en":"To stand out among peers","example":"小王整日刻苦学习，希望自己将来能出人头地。"},{"id":31,"ch":"吹毛求疵","py":"chuī máo qiú cī","meaning":"比喻故意挑剔别人的毛病、缺点","en":"To look for flaws; nitpick","example":"王老板是个挑剔的人，凡事喜欢吹毛求疵。"},{"id":32,"ch":"垂涎三尺","py":"chuí xián sān chǐ","meaning":"形容极其贪婪，或非常想得到某样东西","en":"To yearn for; drool","example":"面对着满桌的美味佳肴，我不禁垂涎三尺。"},{"id":33,"ch":"唇亡齿寒","py":"chún wáng chǐ hán","meaning":"比喻利害密切相关","en":"If one fails, other will be in danger","example":"这两家公司有着多种业务关系，正所谓是唇亡齿寒。"},{"id":34,"ch":"粗制滥造","py":"cū zhì làn zào","meaning":"形容做东西马虎草率，只求数量，不顾质量","en":"Sloppy work","example":"这部影片完全是一部粗制滥造的电影。"},{"id":35,"ch":"打草惊蛇","py":"dǎ cǎo jīng shé","meaning":"比喻做法不谨慎，反使对方有所戒备","en":"Act rashly and alert enemy","example":"为避免打草惊蛇，我们先派人探访军情，然后再商讨对策。"},{"id":36,"ch":"大公无私","py":"dà gōng wú sī","meaning":"指办事公正，没有私心，从集体利益出发","en":"Selfless","example":"生活当中还是有一些大公无私的人，为了别人毫不犹豫地牺牲自己。"},{"id":37,"ch":"大言不惭","py":"dà yán bù cǎn","meaning":"说大话，不感到难为情","en":"Brag unblushingly","example":"英文很差的小钟大言不惭地说自己的英文歌绝对能唱赢外国歌手。"},{"id":38,"ch":"当机立断","py":"dāng jī lì duàn","meaning":"在紧要时刻立即做出决断","en":"Make a prompt decision","example":"村长见水位上升，当机立断，要求村民紧快撤离。"},{"id":39,"ch":"当仁不让","py":"dāng rén bù ràng","meaning":"遇到应该做的事就积极主动去做，不推辞","en":"Unwilling to pass on responsibility","example":"只要是正义的事，我们都应该当仁不让。"},{"id":40,"ch":"德高望重","py":"dé gāo wàng zhòng","meaning":"道德高尚，名望很大","en":"A person of high moral standing","example":"刘教授对学术界贡献良多，是位德高望重的学者。"},{"id":41,"ch":"得过且过","py":"dé guò qiě guò","meaning":"只要能够过得去，就这样下去，形容胸无大志","en":"Get by however one can","example":"我们要坚决克服不思进取、得过且过的心态。"},{"id":42,"ch":"得意忘形","py":"dé yì wàng xíng","meaning":"形容高兴得失去了常态","en":"Be carried away with success","example":"他便得意忘形，结果搞得自己满盘皆输。"},{"id":43,"ch":"雕虫小技","py":"diāo chóng xiǎo jì","meaning":"比喻小技能或微不足道的技能","en":"Insignificant skill","example":"我这只是雕虫小技罢了，怎么能跟专业训练的人比呢？"},{"id":44,"ch":"掉以轻心","py":"diào yǐ qīng xīn","meaning":"对事情采取轻率漫不经心的态度","en":"Lower one's guard","example":"对于小孩发烧，父母不能掉以轻心，以免病情恶化。"},{"id":45,"ch":"东窗事发","py":"dōng chuāng shì fā","meaning":"比喻阴谋已败露","en":"Plot or secret is revealed","example":"你干了那么多违背良心的事，一旦东窗事发，你知道会有什么下场。"},{"id":46,"ch":"东山再起","py":"dōng shān zài qǐ","meaning":"比喻失势之后又重新得势","en":"To make a comeback","example":"失败不过是一时的挫折，只要能好好从中汲取教训，就一定可以东山再起。"},{"id":47,"ch":"独善其身","py":"dú shàn qí shēn","meaning":"现指只顾自己，不管旁人","en":"Only think of own interests","example":"国难当头，任何人都不可能独善其身，不理会身旁的人和事。"},{"id":48,"ch":"对牛弹琴","py":"duì niú tán qín","meaning":"比喻说话不看对象，对不懂的人讲道理","en":"Address the wrong audience","example":"你跟老陈这个大老粗讨论古典音乐，简直就是对牛弹琴。"},{"id":49,"ch":"对症下药","py":"duì zhèng xià yào","meaning":"比喻针对具体问题，采取有效的措施","en":"Take appropriate measures","example":"凡事都有原因，要先找出问题的关键，然后对症下药。"},{"id":50,"ch":"多多益善","py":"duō duō yì shàn","meaning":"越多越好","en":"The more the merrier","example":"现在的人总是尽力争取，多多益善。"},{"id":51,"ch":"耳濡目染","py":"ěr rú mù rǎn","meaning":"不知不觉地受到影响","en":"Influenced by surroundings","example":"他出身绘画之家，耳濡目染，对画画产生浓厚的兴趣。"},{"id":52,"ch":"发人深省","py":"fā rén shēn xǐng","meaning":"启发人深刻思考，有所醒悟","en":"Thought-provoking","example":"这部影片寓意深刻，发人深省。"},{"id":53,"ch":"发扬光大","py":"fā yáng guāng dà","meaning":"使好的作风、传统等得到发展和提高","en":"Enhance and carry forward","example":"华族的优良传统不但应该保存，还要加以发扬光大。"},{"id":54,"ch":"防患未然","py":"fáng huàn wèi rán","meaning":"防止事故或祸害于尚未发生之前","en":"Take preventive measures","example":"山林中严禁烟火，我们必须防患未然，以免发生火患。"},{"id":55,"ch":"废寝忘食","py":"fèi qǐn wàng shí","meaning":"顾不得睡觉，忘记了吃饭，形容专心努力","en":"Forget to eat and sleep due to concentration","example":"这几天他废寝忘食，日夜为参加朗读比赛做准备。"},{"id":56,"ch":"分庭抗礼","py":"fēn tíng kàng lǐ","meaning":"比喻平起平坐，彼此对等的关系","en":"Stand up to somebody as an equal","example":"只要按照计划不停练习，我们一定能和强劲的对手分庭抗礼。"},{"id":57,"ch":"纷至沓来","py":"fēn zhì tà lái","meaning":"形容接连不断地到来","en":"Come in a continuous stream","example":"演唱会即将开始，观众纷至沓来，鱼贯进入会场。"},{"id":58,"ch":"奉公守法","py":"fèng gōng shǒu fǎ","meaning":"形容办事守规矩，遵守法令","en":"Law abiding","example":"林阿姨向来奉公守法，绝对不会做犯法的事情。"},{"id":59,"ch":"敷衍塞责","py":"fū yǎn sè zé","meaning":"指工作不认真负责，表面应付了事","en":"Perform duty without care","example":"主管最不满意的就是员工们有敷衍塞责的工作态度。"},{"id":60,"ch":"赴汤蹈火","py":"fù tāng dǎo huǒ","meaning":"比喻不避艰险，勇于向前","en":"Defy all difficulties and dangers","example":"为了完成任务，赴汤蹈火我也在所不辞。"},{"id":61,"ch":"改过自新","py":"gǎi guò zì xīn","meaning":"改正过失，重新做人","en":"Turn over a new leaf","example":"那名罪犯希望法官能给他一个改过自新的机会。"},{"id":62,"ch":"改邪归正","py":"gǎi xié guī zhèng","meaning":"不再走邪路做坏事，回到正道上来","en":"Give up evil and return to good","example":"尽管他已经改邪归正，但人们仍不信任他。"},{"id":63,"ch":"高瞻远瞩","py":"gāo zhān yuǎn zhǔ","meaning":"形容眼光远大","en":"See high and far","example":"年轻人要高瞻远瞩，放眼世界，才能有一番作为。"},{"id":64,"ch":"高枕无忧","py":"gāo zhěn wú yōu","meaning":"形容没有挂虑，或不加警惕","en":"Set one's mind at ease","example":"经验丰富的林先生担任总经理，公司里的股东们可以高枕无忧了。"},{"id":65,"ch":"各有千秋","py":"gè yǒu qiān qiū","meaning":"比喻各有所长，各有特点","en":"Each have their own strengths","example":"这两篇文章都写得很好，描写手法各有千秋。"},{"id":66,"ch":"根深蒂固","py":"gēn shēn dì gù","meaning":"比喻基础牢固，不容易动摇","en":"Deep-rooted","example":"几千年来，迷信已经在人们心中根深蒂固了，要想破除，并非一朝一夕可做到的。"},{"id":67,"ch":"勾心斗角","py":"gōu xīn dòu jiǎo","meaning":"比喻用尽心机，互相排挤","en":"Intrigue against each other","example":"为了争名夺利，这个部门里的主管勾心斗角，互相排挤。"},{"id":68,"ch":"苟且偷安","py":"gǒu qiě tōu ān","meaning":"形容只求眼前的安宁，不顾将来，不求上进","en":"Be content with temporary ease","example":"我不愿再过这种苟且偷安的生活。"},{"id":69,"ch":"孤陋寡闻","py":"gū lòu guǎ wén","meaning":"形容学识浅薄，见闻不广","en":"Ignorant and ill-informed","example":"他久居乡下，孤陋寡闻，对外界许多事都一无所知。"},{"id":70,"ch":"沽名钓誉","py":"gū míng diào yù","meaning":"用不正当的手段骗取名誉","en":"Fish for fame or compliments","example":"他捐钱给这个协会，是为了沽名钓誉，获得名誉主席的头衔。"},{"id":71,"ch":"孤掌难鸣","py":"gū zhǎng nán míng","meaning":"比喻力量孤单，难以成事","en":"Hard to succeed without support","example":"我想做生意，但孤掌难鸣，若你肯合伙，那就再好不过了。"},{"id":72,"ch":"孤注一掷","py":"gū zhù yī zhì","meaning":"用尽所有力量做最后一次冒险","en":"Risk everything in one attempt","example":"老王反对我这种孤注一掷的做法，认为这样太冒险了。"},{"id":73,"ch":"寡不敌众","py":"guǎ bù dí zhòng","meaning":"人少的抵挡不住人多的","en":"Fight against hopeless odds","example":"敌军知道他们寡不敌众，只好向我军投降。"},{"id":74,"ch":"管中窥豹","py":"guǎn zhōng kuī bào","meaning":"比喻只见到事物的一小部分","en":"Have a limited view","example":"虽然我们在这里停留时间不久，但管中窥豹，还是可以观察到一些他们生活中的精彩。"},{"id":75,"ch":"光明正大","py":"guāng míng zhèng dà","meaning":"形容心怀坦白，言行正派","en":"Just and honorable","example":"他做事一向光明正大，绝不会偷偷摸摸，暗算伤人。"},{"id":76,"ch":"海底捞针","py":"hǎi dǐ lāo zhēn","meaning":"形容很难找到","en":"Needle in a haystack","example":"想在人湖中寻找遗失的戒指，简直就像海底捞针那么难。"},{"id":77,"ch":"海誓山盟","py":"hǎi shì shān méng","meaning":"表示爱情坚定不移的誓言","en":"A solemn promise","example":"明强和慧敏曾立下海誓山盟，要共度余生，永不分离。"},{"id":78,"ch":"害群之马","py":"hài qún zhī mǎ","meaning":"比喻危害社会或集体的人","en":"One who brings disgrace to the group","example":"团队中若出现害群之马，必然会危害到整个团体的利益。"},{"id":79,"ch":"含沙射影","py":"hán shā shè yǐng","meaning":"比喻暗地里中伤、陷害别人","en":"Hurt others indirectly","example":"她在公司里总是爱含沙射影，中伤别人，导致员工之间很不团结。"},{"id":80,"ch":"汗牛充栋","py":"hàn niú chōng dòng","meaning":"形容藏书非常丰富","en":"Immense collection of books","example":"江先生家里的藏书，少说也有上万本了。"},{"id":81,"ch":"好逸恶劳","py":"hào yì wù láo","meaning":"贪图安逸，厌恶劳动","en":"Love ease; hate work","example":"我们自己能做的事情尽量自己做，别养成好逸恶劳的坏习惯。"},{"id":82,"ch":"狐假虎威","py":"hú jiǎ hǔ wēi","meaning":"比喻依仗别人的势力欺压人","en":"Bully people by flaunting powerful connections","example":"他仗着经理对他的宠信，狐假虎威，欺负同事。"},{"id":83,"ch":"胡作非为","py":"hú zuò fēi wéi","meaning":"不顾法纪或舆论，毫无顾忌地做坏事","en":"Act wildly in defiance of law","example":"林太太从不管束孩子的行为，任由他们到处胡作非为。"},{"id":84,"ch":"花言巧语","py":"huā yán qiǎo yǔ","meaning":"用来骗人的虚伪动听的话","en":"Words of flattery","example":"他是个爱情骗子，专用花言巧语来骗女孩子的感情。"},{"id":85,"ch":"画龙点睛","py":"huà lóng diǎn jīng","meaning":"比喻在关键部分用几句话点明要旨，使全篇精警传神","en":"Add finishing touch","example":"老师只加了几句话，文章立刻生色不少，真有画龙点睛之妙。"},{"id":86,"ch":"画蛇添足","py":"huà shé tiān zú","meaning":"比喻做了多余的事，非但无益，反而不合适","en":"Ruin something by adding extra details","example":"话已说得十分得体了，你还要再加上两句，不是画蛇添足吗？"},{"id":87,"ch":"诲人不倦","py":"huì rén bù juàn","meaning":"教导人特别耐心，从不厌倦","en":"Teach tirelessly","example":"我最敬爱我的老师，因为他有诲人不倦的精神。"},{"id":88,"ch":"混水摸鱼","py":"hún shuǐ mō yú","meaning":"比喻趁乱或制造混乱以获取不正当的利益","en":"Create confusion to gain advantage","example":"地震发生后，竟然有人趁着纷乱混水摸鱼，抢夺灾民的财物。"},{"id":89,"ch":"疾风知劲草","py":"jí fēng zhī jìng cǎo","meaning":"比喻立场坚定，即使遇到大难也不变节","en":"Strength of character is tested in a crisis","example":"正所谓疾风知劲草，虽然他被百般折磨，但仍坚持不屈。"},{"id":90,"ch":"家喻户晓","py":"jiā yù hù xiǎo","meaning":"家家户户都知道，形容人人皆知","en":"Widely known","example":"西游记是一部家喻户晓的章回小说，很多人都对小说中的人物十分熟悉。"},{"id":91,"ch":"假公济私","py":"jiǎ gōng jì sī","meaning":"假借公家的名义，谋取私人的利益","en":"Use public office for personal gain","example":"有些人公车私用，分明就是假公济私。"},{"id":92,"ch":"见仁见智","py":"jiàn rén jiàn zhì","meaning":"对同一个问题，各人有各人的看法和见解","en":"People have different views or opinions","example":"对这个问题，回答者由于立场不同，观点也是见仁见智。"},{"id":93,"ch":"见义勇为","py":"jiàn yì yǒng wéi","meaning":"看到正义的事，就勇敢地去做","en":"See something right then do it courageously","example":"要不是杰明见义勇为，冲进火场把我救出来，我早就被烧死了。"},{"id":94,"ch":"捷足先登","py":"jié zú xiān dēng","meaning":"行动快的人先达到目的","en":"Faster one reaches first","example":"当我们到达藏宝的地方，发现已经有人捷足先登，宝藏搬走了。"},{"id":95,"ch":"解铃还须系铃人","py":"jiě líng hái xū jì líng rén","meaning":"比喻谁弄出来的事情，仍须由谁来解决","en":"The problem-maker should fix the problem","example":"既然事情是你搞砸的，所谓解铃还须系铃人，由你来处理最恰当。"},{"id":96,"ch":"金科玉律","py":"jīn kē yù lǜ","meaning":"比喻不可更改的信条","en":"Golden rule","example":"他是这个领域里的权威，他的话就是金科玉律。"},{"id":97,"ch":"金玉良言","py":"jīn yù liáng yán","meaning":"比喻非常宝贵的劝告或教诲","en":"Golden advice from a wise person","example":"我们不要把老师的金玉良言当作耳边风。"},{"id":98,"ch":"近水楼台","py":"jìn shuǐ lóu tái","meaning":"比喻由于地处便利而获得优先的机会","en":"Using proximity to one's favour","example":"父亲有很多珍贵的藏书，所谓近水楼台，我可以很方便地读到这些书。"},{"id":99,"ch":"进退维谷","py":"jìn tuì wéi gǔ","meaning":"无论是进还是退，都处在困境之中，形容进退两难","en":"No way out","example":"我们处于进退维谷的境地，不知该去还是该留。"},{"id":100,"ch":"近朱者赤，近墨者黑","py":"jìn zhū zhě chì jìn mò zhě hēi","meaning":"比喻客观环境对人的成长变化有很大的影响","en":"Surroundings can influence someone","example":"我们在择友的时候要加倍小心，因为近朱者赤，近墨者黑。"},{"id":101,"ch":"惊弓之鸟","py":"jīng gōng zhī niǎo","meaning":"比喻受过惊吓的人，一遇类似情况就害怕","en":"Someone easily frightened due to past experiences","example":"经过上次惊吓，一有风吹草动，他就如惊弓之鸟，拔腿逃跑。"},{"id":102,"ch":"井井有条","py":"jǐng jǐng yǒu tiáo","meaning":"形容整齐不乱，有条有理","en":"Everything clear and orderly","example":"小张办事井井有条，很受老板的赏识。"},{"id":103,"ch":"咎由自取","py":"jiù yóu zì qǔ","meaning":"罪过或灾祸是自己招来的，自己造成的","en":"Blame oneself for problems caused","example":"造成现在这种后果，完全是咎由自取，怪不了别人！"},{"id":104,"ch":"居安思危","py":"jū ān sī wēi","meaning":"处在安定的环境时能想到可能会出现的危难","en":"Think of dangers in times of safety","example":"在和平时期，我们更要居安思危，增强忧患意识。"},{"id":105,"ch":"鞠躬尽瘁","py":"jū gōng jìn cuì","meaning":"表示小心谨慎，竭尽全力效劳","en":"Striving to the best of one's ability","example":"诸葛亮为蜀国鞠躬尽瘁，成就了一番丰功伟绩。"},{"id":106,"ch":"举足轻重","py":"jǔ zú qīng zhòng","meaning":"形容处于重要地位，举一动都影响大局","en":"Every move of an important person has an impact","example":"他是公司里举足轻重的人物，凡是重要的事情都由他决定。"},{"id":107,"ch":"开门见山","py":"kāi mén jiàn shān","meaning":"比喻说话或写文章开头就直截了当地进入正题","en":"Get straight to the main point","example":"我们就开门见山地说吧，别绕来绕去了。"},{"id":108,"ch":"开源节流","py":"kāi yuán jiē liú","meaning":"比喻在财政上增加收入，节省开支","en":"Increase income, reduce expenditure","example":"理财之道，无非就是开源节流。"},{"id":109,"ch":"慷慨解囊","py":"kāng kǎi jiě náng","meaning":"指毫不吝啬，大方地在经济上帮助别人","en":"Give generously to charity","example":"看到灾区孩子们渴望读书的眼神，企业家们纷纷慷慨解囊。"},{"id":110,"ch":"口若悬河","py":"kǒu ruò xuán hé","meaning":"形容人能言善辩，说起话来滔滔不绝","en":"Talk non-stop","example":"这位演说家说起话来口若悬河，把大家的情绪都调动起来了。"},{"id":111,"ch":"口是心非","py":"kǒu shì xīn fēi","meaning":"口里说的是一套，心里想的是另一套","en":"Yes means no","example":"老张这个人一向口不一，口是心非，别信任他。"},{"id":112,"ch":"苦口婆心","py":"kǔ kǒu pó xīn","meaning":"形容好心好意，不辞烦劳地反复规劝","en":"Admonish time and again with good intentions","example":"陈老师对我苦口婆心的劝导，我会永远记在心里。"},{"id":113,"ch":"苦心孤诣","py":"kǔ xīn gū yì","meaning":"苦心钻研，达到别人所达不到的地步","en":"Work very hard to reach a higher level","example":"他在这个领域苦心孤诣钻研十年，颇有建树。"},{"id":114,"ch":"滥竽充数","py":"làn yú chōng shù","meaning":"比喻没有真实本领的人混在行家里充数","en":"Fill a post without any real qualifications","example":"南郭先生在皇宫乐队里滥竽充数，最后被识破，只好落荒而逃。"},{"id":115,"ch":"狼狈为奸","py":"láng bèi wéi jiān","meaning":"比喻互相勾结，一起干坏事","en":"Act in cahoots with each other","example":"贪官和奸商互相勾结，狼狈为奸，一起欺骗消费者。"},{"id":116,"ch":"老马识途","py":"lǎo mǎ shí tú","meaning":"比喻阅历多、经验丰富的人能看清方向，办事熟练","en":"An experienced person knows the way","example":"有老马识途的老王领队，我们不会迷路。"},{"id":117,"ch":"礼尚往来","py":"lǐ shàng wǎng lái","meaning":"指礼节上注重互相往来","en":"Courtesy demands reciprocity","example":"华人讲究礼尚往来，收到别人的礼物后，也会回赠一份礼物给人家。"},{"id":118,"ch":"理直气壮","py":"lǐ zhí qì zhuàng","meaning":"理由正确充分，说话胆气壮","en":"With justice on one's side, one is bold","example":"我们没有错，当然可以理直气壮地去责问他。"},{"id":119,"ch":"力不从心","py":"lì bù cóng xīn","meaning":"心里想做某事而力量办不到","en":"Unable to do as much as one would like to","example":"我很想帮助你，可惜力不从心。"},{"id":120,"ch":"立竿见影","py":"lì gān jiàn yǐng","meaning":"比喻立刻见到功效","en":"Produce instant results","example":"这次训练的效果真是立竿见影，他取得了很大的进步。"},{"id":121,"ch":"励精图治","py":"lì jīng tú zhì","meaning":"振奋精神，想办法治理好国家","en":"Exert oneself to make country prosperous","example":"康熙一生励精图治，开创了后人赞誉的康乾盛世。"},{"id":122,"ch":"良药苦口","py":"liáng yào kǔ kǒu","meaning":"比喻忠心的劝告虽听起来不舒服，但对改正缺点很有好处","en":"Good medicine tastes bitter","example":"良药苦口，忠言逆耳，我是一片好心才出言相劝。"},{"id":123,"ch":"良莠不齐","py":"liáng yǒu bù qí","meaning":"指好人、坏人混在一起","en":"Good and bad people intermingled","example":"现在到人才市场应聘的人虽然很多，但良莠不齐，要找到真正能胜任工作的人也不容易。"},{"id":124,"ch":"两袖清风","py":"liǎng xiù qīng fēng","meaning":"比喻做官廉洁","en":"Free from corruption","example":"做官，就应该两袖清风，为民造福。"},{"id":125,"ch":"了如指掌","py":"liǎo rú zhǐ zhǎng","meaning":"形容对事物了解得非常清楚","en":"To know inside out","example":"我从小在这儿长大，对这里的一切可以说是了如指掌。"},{"id":126,"ch":"临渴掘井","py":"lín kě jué jǐng","meaning":"比喻事先没有准备，临时才想办法","en":"Start acting too late","example":"我们做事要未雨绸缪，提前做好准备，不可临渴掘井。"},{"id":127,"ch":"炉火纯青","py":"lú huǒ chún qīng","meaning":"比喻功夫达到了纯熟完美的境界","en":"Attain the highest level of skill","example":"刘师傅开车三十年了，他的开车技术已经到了炉火纯青的地步。"},{"id":128,"ch":"路不拾遗","py":"lù bù shí yí","meaning":"路上没有人把别人丢失的东西捡走，形容社会风气好","en":"Honest society","example":"新加坡虽然治安良好，但也还没有达到路不拾遗的境界。"},{"id":129,"ch":"落花流水","py":"luò huā liú shuǐ","meaning":"形容遭受惨败","en":"To be soundly defeated","example":"在昨天的决赛中，我代表队打得对手落花流水，荣登冠军宝座。"},{"id":130,"ch":"洛阳纸贵","py":"luò yáng zhǐ guì","meaning":"形容文章写得好，广泛流传风行一时","en":"Popular and widely distributed","example":"他的著作出版后深受好评，读者踊跃购买，大有洛阳纸贵之势。"},{"id":131,"ch":"络绎不绝","py":"luò yì bù jué","meaning":"形容人、马、车、船等来来往往，接连不断","en":"In an endless stream; continuous","example":"综合假期旅游地点开张后，前来游玩的旅客络绎不绝。"},{"id":132,"ch":"毛遂自荐","py":"máo suì zì jiàn","meaning":"比喻自己推荐自己去做某事或担任某职","en":"Volunteer one's services","example":"老师要选班委会会员，小明毛遂自荐，要求担任班长一职。"},{"id":133,"ch":"每况愈下","py":"měi kuàng yù xià","meaning":"比喻情况越来越坏","en":"To steadily deteriorate","example":"爸爸失业后，家里的经济状况就每况愈下。"},{"id":134,"ch":"门可罗雀","py":"mén kě luó què","meaning":"形容门庭冷落，没有宾客来访","en":"Visitors are few and far apart","example":"附近的居民大多搬走了，这一带的商店顾客寥寥，几乎门可罗雀。"},{"id":135,"ch":"面目全非","py":"miàn mù quán fēi","meaning":"完全不是原来的样子，形容变化很大","en":"Change beyond recognition","example":"小明的作文被老师改得面目全非，几乎不是他原本的文章了。"},{"id":136,"ch":"名列前茅","py":"míng liè qián máo","meaning":"比喻比赛或考试成绩排在前面","en":"Be one of the best","example":"明华的成绩很突出，每次考试都名列前茅。"},{"id":137,"ch":"名落孙山","py":"míng luò sūn shān","meaning":"比喻没有考中，落选或没被录取","en":"To fail in a competitive examination","example":"小李在选拔赛中名落孙山，没有机会代表学校出赛。"},{"id":138,"ch":"墨守成规","py":"mò shǒu chéng guī","meaning":"固执地守着老规矩不肯改变","en":"Stick to convention","example":"时代在不断进步，如果我们一直墨守成规，必将被社会淘汰。"},{"id":139,"ch":"目空一切","py":"mù kōng yī qiè","meaning":"形容非常狂妄，一切都不放在眼里","en":"Arrogant; disdainful","example":"他自恃有才，目空一切，谁都看不起。"},{"id":140,"ch":"逆水行舟","py":"nì shuǐ xíng zhōu","meaning":"比喻不努力就要退步","en":"Learning is either moving ahead or falling behind","example":"学习如逆水行舟，不进则退。"},{"id":141,"ch":"宁死不屈","py":"nìng sǐ bù qū","meaning":"宁愿死也不屈服","en":"Rather die than surrender","example":"面对日军的威逼利诱，林谋盛宁死不屈，坚决不出卖祖国。"},{"id":142,"ch":"拍案叫绝","py":"pāi àn jiào jué","meaning":"形容非常赞赏","en":"Admiration of wonderful performance","example":"这座楼房的设计精妙绝伦，令人拍案叫绝。"},{"id":143,"ch":"蓬头垢面","py":"péng tóu gòu miàn","meaning":"形容头发散乱，脸上很脏","en":"Messy appearance","example":"这个瘦削的小男孩蓬头垢面，站在街边向路人行乞。"},{"id":144,"ch":"破釜沉舟","py":"pò fǔ chén zhōu","meaning":"比喻痛下决心，义无反顾，不留退路","en":"To cut off all means of retreat","example":"全体将士都抱着破釜沉舟的决心，要跟敌人决一死战。"},{"id":145,"ch":"欺世盗名","py":"qī shì dào míng","meaning":"欺骗世人，窃取名誉","en":"Gain fame by deceiving public","example":"这位著名的导演表面上品德高尚，实际却腐化堕落，欺世盗名。"},{"id":146,"ch":"千钧一发","py":"qiān jūn yī fà","meaning":"比喻情况万分危急或非常紧要","en":"In imminent peril","example":"就在千钧一发的时刻，一位行人奋不顾身地救起了落水儿童。"},{"id":147,"ch":"前车之鉴","py":"qián chē zhī jiàn","meaning":"比喻先前的失败，可以作为以后的教训","en":"Learn lessons from other's mistakes","example":"我们既要学习人家成功的经验，也要以人家的失败作为前车之鉴。"},{"id":148,"ch":"前事不忘，后事之师","py":"qián shì bù wàng hòu shì zhī shī","meaning":"记取从前的经验教训，作为以后工作的借鉴","en":"Lessons from past guide the future","example":"正所谓前事不忘，后事之师，我们要记取这次失败的教训，争取下次实现目标。"},{"id":149,"ch":"潜移默化","py":"qián yí mò huà","meaning":"指人的思想、性格、行为在无形之中起了变化","en":"Influence someone's thinking","example":"母亲责任心的言行对我起到了潜移默化的作用。"},{"id":150,"ch":"巧夺天工","py":"qiǎo duó tiān gōng","meaning":"形容技艺十分精妙","en":"Wonderful workmanship","example":"这个公园里的假山，造型新奇巧妙，真可谓是巧夺天工。"},{"id":151,"ch":"青红皂白","py":"qīng hóng zào bái","meaning":"比喻事情的是非原委","en":"The story and reasons behind something","example":"他不分青红皂白就打了我一顿，真是莫名其妙。"},{"id":152,"ch":"情同手足","py":"qíng tóng shǒu zú","meaning":"比喻情谊深厚，如同兄弟一样","en":"Like brothers; deep friendship","example":"他们二人虽不是亲兄弟，却情同手足。"},{"id":153,"ch":"人浮于事","py":"rén fú yú shì","meaning":"指工作中人员过多或人多事少","en":"Overstaffed","example":"如今公司人浮于事，老板准备裁员呢。"},{"id":154,"ch":"人杰地灵","py":"rén jié dì líng","meaning":"指人物出生或到过的地方，就会成为名胜地区","en":"Greatness of a man brings glory to a place","example":"这座小城人杰地灵，出了不少知名人士。"},{"id":155,"ch":"人尽其才","py":"rén jìn qí cái","meaning":"每个人都可以充分地发挥自己的才能","en":"Make the most possible use of talent","example":"如果能人尽其才，物尽其用，我们的国家就会发展得更快。"},{"id":156,"ch":"人云亦云","py":"rén yún yì yún","meaning":"人家怎么说，自己也跟着怎么说，没有主见","en":"Echo the views of others","example":"看待问题要有自己独到的见解，绝对不可以人云亦云。"},{"id":157,"ch":"如火如荼","py":"rú huǒ rú tú","meaning":"形容气势旺盛，气氛热烈","en":"Like a raging fire; spread very quickly","example":"老师组织的小组活动在班级内开展得如火如荼，带动了学生的学习热情。"},{"id":158,"ch":"如释重负","py":"rú shì zhòng fù","meaning":"形容紧张之后感到轻松愉快","en":"Feel as if one has relieved a heavy load","example":"工作终于如期完成，他如释重负地嘘了一口气。"},{"id":159,"ch":"入木三分","py":"rù mù sān fēn","meaning":"形容见解、刻画得很深刻","en":"Profound and keen","example":"这部小说对人物的刻画栩栩如生，入木三分。"},{"id":160,"ch":"塞翁失马","py":"sài wēng shī mǎ","meaning":"比喻虽然暂时遭受损失，却也因此获得好处，坏事可能转变为好事","en":"Blessing in disguise","example":"塞翁失马，焉知非福。你第一次没考好，如果能从中吸取教训，以后一定会考得更好。"},{"id":161,"ch":"三思而行","py":"sān sī ér xíng","meaning":"经过反复考虑，然后再去做","en":"Don't act until one has thought carefully","example":"做事情不可以鲁莽，一定要三思而行。"},{"id":162,"ch":"杀鸡取卵","py":"shā jī qǔ luǎn","meaning":"比喻贪图眼前的好处而不顾长远利益","en":"Only look at present advantages and ignore future consequences","example":"这家公司为了一时之利而背弃诚信，无异于杀鸡取卵。"},{"id":163,"ch":"伤天害理","py":"shāng tiān hài lǐ","meaning":"形容做事凶恶残忍，丧尽天良","en":"Outrageous","example":"你千万不要干下伤天害理的事，否则一定会受到惩罚。"},{"id":164,"ch":"舍己为人","py":"shě jǐ wèi rén","meaning":"牺牲自己的利益去帮助别人","en":"Sacrifice one's own interest for the sake of others","example":"他冲进火场营救人，为我们树立了一个舍己为人的好榜样。"},{"id":165,"ch":"实事求是","py":"shí shì qiú shì","meaning":"指从实际对象出发，按照事物的实际情况办事","en":"Practical and realistic","example":"新加坡政府坚持实事求是的工作作风，才能将国家建设得更加美好。"},{"id":166,"ch":"事半功倍","py":"shì bàn gōng bèi","meaning":"形容做事得法，因而费力小，收效大","en":"Get twice the results with half the effort","example":"事情要考虑周详后再动手，才能够事半功倍。"},{"id":167,"ch":"视死如归","py":"shì sǐ rú guī","meaning":"把死看得像回家一样，形容不怕牺牲生命","en":"Very brave","example":"兵士们个个视死如归，坚持不屈，昂首挺胸地站在沙场上。"},{"id":168,"ch":"守望相助","py":"shǒu wàng xiāng zhù","meaning":"互相防守了望，互相帮助","en":"Mutual help and protection","example":"邻居间应该守望相助，看到对方有困难就出手帮忙。"},{"id":169,"ch":"守株待兔","py":"shǒu zhū dài tù","meaning":"比喻妄图不经过努力而得到成功的侥幸心理","en":"Trust on luck for opportunities","example":"凡事不想认真去做，只想守株待兔的人，是不会获得成功的。"},{"id":170,"ch":"熟能生巧","py":"shú néng shēng qiǎo","meaning":"熟练了，就能找到窍门","en":"Practice makes perfect","example":"要想掌握技术，只有勤学苦练，才能熟能生巧。"},{"id":171,"ch":"水到渠成","py":"shuǐ dào qú chéng","meaning":"比喻条件成熟，事情自然会成功","en":"When conditions are right, success will come naturally","example":"这次的合约我们已经做了万全的准备，现在就等水到渠成，完成手续。"},{"id":172,"ch":"水落石出","py":"shuǐ luò shí chū","meaning":"比喻事情的真相完全显露出来","en":"The truth comes out","example":"这件事情既然已经水落石出了，谣言当然就不攻自破了。"},{"id":173,"ch":"司空见惯","py":"sī kōng jiàn guàn","meaning":"指某事常见，不足为奇","en":"Common sight","example":"对于他的无理取闹，我们早已司空见惯，见怪不怪。"},{"id":174,"ch":"四面楚歌","py":"sì miàn chǔ gē","meaning":"比喻陷入四面受敌、孤立无援的境地","en":"Surrounded by enemies","example":"因为战略错误，造成前线军队陷入四面楚歌的困境。"},{"id":175,"ch":"损人利己","py":"sǔn rén lì jǐ","meaning":"损害别人，使自己得到好处","en":"Harm others to benefit oneself","example":"他宁可失去升职的机会，也不愿做损人利己的事。"},{"id":176,"ch":"螳臂当车","py":"táng bì dāng chē","meaning":"比喻做自己做不到的事情，必然失败","en":"Overrate oneself and try to hold back an overwhelming force","example":"他这种螳臂当车的做法简直就是自不量力，自讨苦吃。"},{"id":177,"ch":"桃李满天下","py":"táo lǐ mǎn tiān xià","meaning":"比喻学生很多，各地都有","en":"Have pupils everywhere","example":"李老师教了一辈子的书，学生遍布全世界，真是桃李满天下。"},{"id":178,"ch":"天渊之别","py":"tiān yuān zhī bié","meaning":"比喻差别极大","en":"Totally different","example":"他们俩虽是双胞胎，但性格却有天渊之别，一个好动，一个好静。"},{"id":179,"ch":"挑拨离间","py":"tiǎo bō lí jiàn","meaning":"拨弄是非，使别人不团结","en":"Sow discord; separate people","example":"他们俩之所以会闹翻是因为有人在挑拨离间。"},{"id":180,"ch":"铤而走险","py":"tǐng ér zǒu xiǎn","meaning":"指无路可走而采取冒险行动","en":"Take risks out of desperation","example":"他为了偿还债务，铤而走险，去私犯罪。"},{"id":181,"ch":"同甘共苦","py":"tóng gān gòng kǔ","meaning":"共同享受幸福，共同担当艰苦","en":"To share life's joys and sorrows","example":"夫妻若能同甘共苦，一定能创造美好的未来。"},{"id":182,"ch":"同流合污","py":"tóng liú hé wū","meaning":"随着坏人一起做坏事","en":"Associate with evil; partner in crime","example":"虽然他身处恶劣环境，但他绝对不会跟这些坏人同流合污。"},{"id":183,"ch":"同心协力","py":"tóng xīn xié lì","meaning":"合在一起，以同一目标，共同努力做事","en":"Work together with one heart","example":"只要大家同心协力，就能把事情做好。"},{"id":184,"ch":"同舟共济","py":"tóng zhōu gòng jì","meaning":"比喻同心协力，共同渡过难关","en":"Collaborate towards same goal","example":"在这个艰难的处境中，我们唯有同舟共济，才可以摆脱困境。"},{"id":185,"ch":"徒劳无功","py":"tú láo wú gōng","meaning":"白费力气，没有成就或好处","en":"Make a futile effort","example":"做事必须用正确的方法，不能蛮干，否则就可能徒劳无功。"},{"id":186,"ch":"退避三舍","py":"tuì bì sān shè","meaning":"比喻退让和回避，避免冲突","en":"Give way in face of superior strength","example":"大家一见到那个不讲理的恶霸，都会退避三舍，以免惹上不必要的麻烦。"},{"id":187,"ch":"万古流芳","py":"wàn gǔ liú fāng","meaning":"形容伟大人物的名誉世世代代传下来","en":"Achieve immortal fame","example":"新加坡抗日英雄林谋盛的名字，万古流芳，永垂不朽。"},{"id":188,"ch":"万事俱备，只欠东风","py":"wàn shì jù bèi zhǐ qiàn dōng fēng","meaning":"样样都准备好了，只差最后一个重要条件","en":"Everything is ready except for one crucial item","example":"这项计划的细节都已经拟好了，可说是万事俱备，只欠东风。"},{"id":189,"ch":"望尘莫及","py":"wàng chén mò jí","meaning":"比喻远远落后","en":"Too far behind to catch up","example":"他在各方面的成就都那么突出，平凡的我真是望尘莫及。"},{"id":190,"ch":"忘恩负义","py":"wàng ēn fù yì","meaning":"忘记别人对自己的恩情，做对不起别人的事","en":"Ungrateful","example":"我们做人应该知恩图报，不能忘恩负义。"},{"id":191,"ch":"危言耸听","py":"wēi yán sǒng tīng","meaning":"故意说吓人的话使听的人惊慌","en":"Say frightening things to cause alarm","example":"你别危言耸听了，这种病并不如你所说的那么严重。"},{"id":192,"ch":"为非作歹","py":"wéi fēi zuò dǎi","meaning":"做各种坏事","en":"Do evil; commit crimes","example":"他不务正业，整天跟流氓混在一起为非作歹。"},{"id":193,"ch":"为虎作伥","py":"wèi hǔ zuò chāng","meaning":"比喻帮助坏人的帮凶，帮助恶人做坏事","en":"To help a villain do evil","example":"日军侵略时期，许多人去做日军的间谍，为虎作伥，残害自己的同胞。"},{"id":194,"ch":"未雨绸缪","py":"wèi yǔ chóu móu","meaning":"比喻事先做好准备","en":"Take precautions","example":"我们做事若能未雨绸缪，就不会在紧要关头出差错。"},{"id":195,"ch":"温故知新","py":"wēn gù zhī xīn","meaning":"温习旧的知识，能够得到新的理解和体会","en":"Understand the present by reviewing the past","example":"所谓温故知新，读过的书，有空时也可以拿出来再读读，这对学习很有益处。"},{"id":196,"ch":"温文尔雅","py":"wēn wén ěr yǎ","meaning":"态度温和，举止文雅","en":"Cultured and refined","example":"他温文尔雅，风度翩翩，一看就知受过良好的教育。"},{"id":197,"ch":"闻鸡起舞","py":"wén jī qǐ wǔ","meaning":"听到鸡叫就起来舞剑，形容发奋有为","en":"Diligent and self-disciplined","example":"祖逖闻鸡起舞，后来建功立业，终成为国家的栋梁之才。"},{"id":198,"ch":"卧薪尝胆","py":"wò xīn cháng dǎn","meaning":"形容人刻苦自励，发奋图强","en":"Undergo self-imposed hardships to strengthen resolve","example":"哥哥生意失败后，经过三年的卧薪尝胆，终于重新起步，东山再起。"},{"id":199,"ch":"乌合之众","py":"wū hé zhī zhòng","meaning":"形容临时凑集的、毫无组织纪律的一群人","en":"Disorderly crowd; mob","example":"这些土匪只是一群乌合之众，不堪一击。"},{"id":200,"ch":"乌烟瘴气","py":"wū yān zhàng qì","meaning":"比喻环境嘈杂，秩序混乱，风气不正","en":"Foul atmosphere","example":"他们在开会时不停地抽烟，把会议室弄得乌烟瘴气。"},{"id":201,"ch":"无可厚非","py":"wú kě hòu fēi","meaning":"不能过分责备，说话做事虽有缺点，但还有可取之处","en":"Not altogether blameless but forgivable","example":"父母疼爱孩子是人之常情，无可厚非，但过分溺爱，就不是一件好事了。"},{"id":202,"ch":"无微不至","py":"wú wēi bú zhì","meaning":"形容关怀、照顾得非常细心周到","en":"Meticulous","example":"在妈妈无微不至地照顾下，小明的病很快就痊愈了。"},{"id":203,"ch":"五体投地","py":"wǔ tǐ tóu dì","meaning":"比喻心悦诚服或佩服到了极点","en":"To praise somebody","example":"球迷们对球王马拉多纳的球技佩服得五体投地。"},{"id":204,"ch":"相辅相成","py":"xiāng fǔ xiāng chéng","meaning":"指两件事物互相助益、互相配合","en":"Supplement and complement each other","example":"读和写是学好语文的必经途径，它们之间的关系是相辅相成的，缺一不可。"},{"id":205,"ch":"心猿意马","py":"xīn yuán yì mǎ","meaning":"形容心神不定，不专心","en":"Restless","example":"上课应该专心听讲，不要心猿意马，胡思乱想。"},{"id":206,"ch":"幸灾乐祸","py":"xìng zāi lè huò","meaning":"别人遭受灾祸，自己反而高兴","en":"Have joy at others suffering","example":"妹妹从椅子上摔下来，小强不但没扶她起来，还幸灾乐祸笑个不停。"},{"id":207,"ch":"袖手旁观","py":"xiù shǒu páng guān","meaning":"比喻置事外，不过问也不帮助","en":"Stand by and not help","example":"朋友有困难，我们不该袖手旁观，应该尽力帮忙才是。"},{"id":208,"ch":"胸有成竹","py":"xiōng yǒu chéng zhú","meaning":"比喻事前已有了主意，因而显得镇静而有把握","en":"Well-thought plan","example":"这次的考试，小华准备充足，一副胸有成竹的样子。"},{"id":209,"ch":"虚怀若谷","py":"xū huái ruò gǔ","meaning":"形容非常谦虚","en":"Open-minded","example":"季校长是个谦虚谨慎、虚怀若谷的教育家。"},{"id":210,"ch":"悬崖勒马","py":"xuán yá lè mǎ","meaning":"比喻到了危险的边缘及时醒悟回头","en":"Respond to danger at the last moment","example":"小明成天跟不良少年混在一起惹事，若再不悬崖勒马，后果将不堪设想。"},{"id":211,"ch":"削足适履","py":"xuē zú shì lǚ","meaning":"比喻没有原则地迁就或勉强凑合","en":"Impractical solution","example":"你必须坚持原则，削足适履是无法解决问题的。"},{"id":212,"ch":"雪中送炭","py":"xuě zhōng sòng tàn","meaning":"比喻在别人急需时给以帮助","en":"Provide help in someone's time of need","example":"在他人遇到困难时伸出援手，无异于雪中送炭，对方一定会十分感激。"},{"id":213,"ch":"循循善诱","py":"xún xún shàn yòu","meaning":"指有步骤地进行引导、教育","en":"Teach with skill and patience","example":"好的老师总是循循善诱，既平易近人，又使人敬畏。"},{"id":214,"ch":"掩耳盗铃","py":"yǎn ěr dào líng","meaning":"比喻自己欺骗自己","en":"Deceive oneself","example":"你编造了这么高远的说法，还以为能骗过所有的人，这无疑是掩耳盗铃，自欺欺人。"},{"id":215,"ch":"夜郎自大","py":"yè láng zì dà","meaning":"比喻孤陋寡闻而又狂妄自大","en":"Arrogant","example":"你应该多出去见见世面，才不会像这样自以为了不起，夜郎自大。"},{"id":216,"ch":"一败涂地","py":"yī bài tú dì","meaning":"形容失败得很惨","en":"Fail completely","example":"陈委员狂妄自大，不得人心，难怪在这次选举中输得一败涂地。"},{"id":217,"ch":"一帆风顺","py":"yī fān fēng shùn","meaning":"比喻旅程、工作或境遇非常顺利","en":"To go smoothly","example":"他的人缘极好，难怪事业一帆风顺，不到三十岁已经当上了总经理。"},{"id":218,"ch":"一鼓作气","py":"yī gǔ zuò qì","meaning":"比喻做事要趁劲头大的时候一口气做完","en":"Press on to finish without letup","example":"放学后，我一鼓作气把功课做完，才和朋友们出去打球。"},{"id":219,"ch":"一见如故","py":"yī jiàn rú gù","meaning":"形容初次见面就很投缘","en":"Familiarity at first sight","example":"开学第一天我才认识李明，但我们俩一见如故，很快成为了知心的朋友。"},{"id":220,"ch":"一鸣惊人","py":"yī míng jīng rén","meaning":"比喻平时不为人所知，突然有惊人的表现","en":"Amaze everyone with a single brilliant feat","example":"大明在羽球界表现平平，没想到这次比赛却一鸣惊人，摘下了冠军宝座。"},{"id":221,"ch":"一暴十寒","py":"yī pù shí hán","meaning":"比喻学习工作没有恒心，努力的时候少，懒惰的时候多","en":"Putting in only a little effort makes it difficult to achieve results","example":"成功靠的是毅力和恒心，像你这样一暴十寒，怎么会有成就呢？"},{"id":222,"ch":"一视同仁","py":"yī shì tóng rén","meaning":"指对人同样看待，不分厚薄","en":"To treat everyone equally","example":"这个公司的老板对员工一视同仁，勤奋的职员都有机会获得升职。"},{"id":223,"ch":"一意孤行","py":"yī yì gū xíng","meaning":"固执地按照自己的心意做事，不听别人的意见","en":"Stubborn; insists on having one's way","example":"你应该认真考虑大家的意见，不要总是一意孤行。"},{"id":224,"ch":"一针见血","py":"yī zhēn jiàn xiě","meaning":"比喻说话简要，一下子就说中要害","en":"Pierce to the truth with one remark","example":"他的批评一针见血，切中小王的要害，令假公济私的小王很不安。"},{"id":225,"ch":"以卵击石","py":"yǐ luǎn jī shí","meaning":"拿蛋去打石头，比喻以弱敌强，自取灭亡","en":"Court defeat by fighting against overwhelming odds","example":"他是上届单打冠军，林教练派经验尚浅的小明去和他对阵，岂不是以卵击石。"},{"id":226,"ch":"以身作则","py":"yǐ shēn zuò zé","meaning":"用自己的实际行动做榜样","en":"To serve as an example","example":"他不但教育子女要养成看书的习惯，而且以身作则，每天陪子女阅读。"},{"id":227,"ch":"以牙还牙","py":"yǐ yá huán yá","meaning":"比喻用对方使用的手段回击对方","en":"Retaliation","example":"做人应该待人宽容，别事事计较，甚至以牙还牙地报复对方。"},{"id":228,"ch":"因材施教","py":"yīn cái shī jiào","meaning":"根据不同的对象而采取不同的教育方法","en":"To teach according to students ability","example":"校长要求每位老师因材施教，使不同程度的学生都能发展他们的潜能。"},{"id":229,"ch":"饮水思源","py":"yǐn shuǐ sī yuán","meaning":"喝水时想到水的来源，比喻不忘本","en":"Be grateful for source","example":"你能有今天的成就，应该饮水思源，感谢老师的指导与帮助。"},{"id":230,"ch":"迎刃而解","py":"yíng rèn ér jiě","meaning":"比喻主要问题解决了，其他问题也容易办","en":"Problem is readily solved","example":"这个关键难题一解决，其他问题也就迎刃而解了。"},{"id":231,"ch":"应接不暇","py":"yīng jiē bù xiá","meaning":"形容事情繁多，应付不来","en":"Overwhelmed","example":"学校假期中，前来借书的学生很多，图书馆的工作人员忙得应接不暇。"},{"id":232,"ch":"与虎谋皮","py":"yǔ hǔ móu pí","meaning":"比喻商量的事情有害于对方切身利益，绝对办不成","en":"Attempt the impossible","example":"这间店生意很好，你想要店主转让，这简直是与虎谋皮！"},{"id":233,"ch":"与日俱增","py":"yǔ rì jù zēng","meaning":"随着时间增长，不断增加或增长很快","en":"To increase steadily with each passing day","example":"生意受到媒体大肆报道后，营业额与日俱增。"},{"id":234,"ch":"缘木求鱼","py":"yuán mù qiú yú","meaning":"爬到树上去找鱼，比喻方向或方法不对，不可能达到目的","en":"Wrong and fruitless approach","example":"这个是材料的问题，你从工人下手去解决问题，根本就是缘木求鱼。"},{"id":235,"ch":"约法三章","py":"yuē fǎ sān zhāng","meaning":"指事先订立简单易行的条款由大家共同遵守","en":"Simple rules to be observed by all","example":"我和合作厂商约法三章，在下订单的时候就必须先付百分之三十的定金。"},{"id":236,"ch":"再接再厉","py":"zài jiē zài lì","meaning":"比喻继续努力，毫不放松","en":"To make persistent efforts","example":"在进入半决赛后，陈教练鼓励全体球员再接再厉，争取进入大决赛。"},{"id":237,"ch":"真知灼见","py":"zhēn zhī zhuó jiàn","meaning":"正确透彻的见解","en":"Deep insight","example":"黄教授所发表的言论确实是真知灼见，深受学术界的赞誉。"},{"id":238,"ch":"蒸蒸日上","py":"zhēng zhēng rì shàng","meaning":"形容事业一天天向上发展","en":"Becoming more prosperous each passing day","example":"在员工们不懈努力下，公司的业绩蒸蒸日上。"},{"id":239,"ch":"执迷不悟","py":"zhí mí bù wù","meaning":"坚持错误而不觉悟","en":"Obstinately stick to a wrong course","example":"尽管老师苦口婆心地劝他改过自新，但他仍执迷不悟。"},{"id":240,"ch":"纸上谈兵","py":"zhǐ shàng tán bīng","meaning":"比喻空谈理论，不能解决实际问题","en":"A solution that is only a theory","example":"你的理论若不能联系实际，那就只是纸上谈兵，是不可能成功的。"},{"id":241,"ch":"志同道合","py":"zhì tóng dào hé","meaning":"志向相同，意见一致","en":"Like-minded; same idea","example":"我和小华自小相识，兴趣爱好一致，是志同道合的好朋友。"},{"id":242,"ch":"志在四方","py":"zhì zài sì fāng","meaning":"形容有远大的志向和抱负","en":"To have high aspirations","example":"男儿志在四方，将来有机会我要到国外去发展事业。"},{"id":243,"ch":"州官放火","py":"zhōu guān fàng huǒ","meaning":"比喻上面的人自己可以胡作非为，却不许下面的人正当活动","en":"High-ranking individuals can do what lower-ranking people cannot","example":"经理不许职员把旧报纸带回家，自己却每天带走当天的报纸，真是州官放火，不许百姓点灯。"},{"id":244,"ch":"装聋作哑","py":"zhuāng lóng zuò yǎ","meaning":"指故意不理睬，只当不知道","en":"Pretend to be dumb and deaf","example":"对于班上同学被欺负的事件，我们不能装聋作哑，闻而不问。"},{"id":245,"ch":"自暴自弃","py":"zì bào zì qì","meaning":"自己糟蹋、弃绝自己，甘心落后或堕落","en":"To give up","example":"虽然这次比赛输了，但我们不能自暴自弃，要继续努力，争取胜利。"},{"id":246,"ch":"自食其力","py":"zì shí qí lì","meaning":"依靠自己的劳动获取生活来源","en":"Support oneself by own labour","example":"年轻人要自食其力，总是依靠父母是不会有出息的。"},{"id":247,"ch":"自投罗网","py":"zì tóu luó wǎng","meaning":"自己主动钻入对方布下的陷阱中","en":"To walk into a trap","example":"这名歹徒竟然向便衣警察兜售毒品，真是自投罗网。"},{"id":248,"ch":"自相矛盾","py":"zì xiāng máo dùn","meaning":"比喻言语、行动前后不一致或互相抵触","en":"Contradict oneself","example":"将军原本主张抵抗到底，现在却主张投降，这真是自相矛盾。"},{"id":249,"ch":"作壁上观","py":"zuò bì shàng guān","meaning":"比喻站在一旁看着，不动手帮忙","en":"Be a bystander","example":"他看到别人有困难，总是作壁上观，从来也不会伸出援手。"},{"id":250,"ch":"坐享其成","py":"zuò xiǎng qí chéng","meaning":"自己不出力而享受别人取得的成果","en":"Sit idle and enjoy the fruits of others labour","example":"李经理从没出过力，计划完成后他却坐享其成，将功劳归于自己，大家都感到愤愤不平。"}];
+
+var selTypes=['mc-meaning','mc-usage','mc-english','mc-confusable'];
+var queue=[],curQ=0,score=0,missed=[],curAns=null,hintOn=false,streak=0;
+
+function $(id){return document.getElementById(id);}
+
+// Attach set checkbox listeners
+function updateSelSets(){
+  var allCb=document.getElementById('all-sets-cb');
+  var setCbs=document.querySelectorAll('.set-cb input[type=checkbox]:not(#all-sets-cb)');
+  if(allCb && allCb.checked){
+    setCbs.forEach(function(c){c.checked=false;});
+  }
+  var anyChecked=Array.from(setCbs).some(function(c){return c.checked;});
+  var startBtn=document.getElementById('start-btn');
+  if(startBtn) startBtn.disabled = (!anyChecked && !(allCb && allCb.checked)) || selTypes.length===0;
+}
+document.querySelectorAll('.set-cb input[type=checkbox]').forEach(function(cb){
+  cb.addEventListener('change',function(){
+    var allCb=document.getElementById('all-sets-cb');
+    if(this.id==='all-sets-cb' && this.checked){
+      document.querySelectorAll('.set-cb input[type=checkbox]:not(#all-sets-cb)').forEach(function(c){c.checked=false;});
+    } else if(this.id!=='all-sets-cb' && this.checked && allCb){
+      allCb.checked=false;
+    }
+    updateSelSets();
+  });
+});
+
+// Attach checkbox listeners for question types
+document.querySelectorAll('.type-check input[type=checkbox]').forEach(function(cb){
+  cb.addEventListener('change',function(){
+    selTypes=Array.from(document.querySelectorAll('.type-check input:checked')).map(function(c){return c.dataset.type;});
+    $('start-btn').disabled=selTypes.length===0;
+  });
+});
+
+// Start button
+$('start-btn').addEventListener('click',startQuiz);
+
+// Submit fill-in on Enter
+$('fill-in').addEventListener('keydown',function(e){if(e.key==='Enter')checkFill();});
+$('submit-btn').addEventListener('click',checkFill);
+$('next-btn').addEventListener('click',nextQ);
+$('hint-btn').addEventListener('click',toggleHint);
+$('home-btn').addEventListener('click',goHome);
+$('home-top-btn').addEventListener('click',goHome);
+$('weak-btn').addEventListener('click',goWeakSpots);
+
+// ── Font size toggle ──────────────────────────────
+var fontLevels=['','font-lg','font-xl'];
+var fontIdx=0;
+var fontLabels=['Aa','Aa+','Aa++'];
+$('font-btn').addEventListener('click',function(){
+  fontIdx=(fontIdx+1)%3;
+  var scales=[1,1.12,1.25];
+  document.documentElement.style.setProperty('--fs',scales[fontIdx]);
+  $('font-btn').textContent=fontLabels[fontIdx];
+  $('font-btn').classList.toggle('active', fontIdx>0);
+});
+
+// ── Dark mode toggle ──────────────────────────────
+$('dark-btn').addEventListener('click',function(){
+  var isDark=document.body.classList.toggle('dark');
+  $('dark-btn').textContent=isDark?'☀️':'🌙';
+  $('dark-btn').classList.toggle('active',isDark);
+});
+
+function shuffle(a){
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+function pool(){
+  var allCb=document.getElementById('all-sets-cb');
+  if(allCb && allCb.checked) return IDIOMS.slice();
+  var result=[];
+  document.querySelectorAll('.set-cb input[type=checkbox]:not(#all-sets-cb)').forEach(function(cb){
+    if(cb.checked){
+      var s=parseInt(cb.dataset.start),e=parseInt(cb.dataset.end);
+      IDIOMS.slice(s,e+1).forEach(function(id){
+        if(!result.find(function(x){return x.ch===id.ch;})) result.push(id);
+      });
+    }
+  });
+  return result;
+}
+function distractors(idiom,field,n){
+  return shuffle(IDIOMS.filter(function(x){return x.ch!==idiom.ch;})).slice(0,n).map(function(x){return x[field];});
+}
+function usageDistractors(idiom,n){
+  // Take example sentences from other idioms and inject the target idiom in place of their own idiom,
+  // so all 4 options contain the target idiom — only the correct one uses it in its proper context.
+  return shuffle(IDIOMS.filter(function(x){return x.ch!==idiom.ch&&x.example.indexOf(x.ch)>=0;})).slice(0,n).map(function(x){return x.example.replace(x.ch,idiom.ch);});
+}
+
+// Confusable pairs — idioms that are commonly mixed up
+var CONFUSABLE_GROUPS=[
+  ['半途而废','功败垂成','前功尽弃'],
+  ['爱屋及乌','城门失火，殃及池鱼'],
+  ['杯弓蛇影','草木皆兵'],
+  ['对牛弹琴','班门弄斧'],
+  ['画蛇添足','画龙点睛'],
+  ['守株待兔','坐享其成'],
+  ['滥竽充数','鱼目混珠'],
+  ['狐假虎威','为虎作伥'],
+  ['同流合污','狼狈为奸'],
+  ['出尔反尔','自相矛盾'],
+  ['沧海桑田','时过境迁'],
+  ['塞翁失马','否极泰来'],
+  ['一鸣惊人','出人头地'],
+  ['废寝忘食','夜以继日'],
+  ['见义勇为','当仁不让'],
+  ['一视同仁','大公无私'],
+  ['人云亦云','随波逐流'],
+  ['孤注一掷','破釜沉舟'],
+  ['不耻下问','虚怀若谷'],
+  ['口是心非','阳奉阴违']
+];
+function findConfusable(idiom){
+  for(var i=0;i<CONFUSABLE_GROUPS.length;i++){
+    var g=CONFUSABLE_GROUPS[i];
+    if(g.indexOf(idiom.ch)>=0){
+      var others=g.filter(function(ch){return ch!==idiom.ch;});
+      var result=others.map(function(ch){return IDIOMS.find(function(x){return x.ch===ch;});}).filter(Boolean);
+      if(result.length>0)return result.slice(0,2);
+    }
+  }
+  // fallback: pick a semantically-close random idiom
+  return null;
+}
+function buildQ(p){
+  var MAX_Q=15;
+  var sample=shuffle(p.slice());
+  var qs=[];
+  sample.forEach(function(idiom){
+    if(selTypes.indexOf('mc-meaning')>=0){
+      var opts=shuffle([idiom.meaning].concat(distractors(idiom,'meaning',3)));
+      qs.push({type:'mc-meaning',label:'选择题：根据成语选出正确意思',text:'"'+idiom.ch+'" 是什么意思？',opts:opts,ans:idiom.meaning,idiom:idiom});
+    }
+    if(selTypes.indexOf('mc-usage')>=0){
+      var opts2=shuffle([idiom.example].concat(usageDistractors(idiom,3)));
+      qs.push({type:'mc-usage',label:'选择题：哪个句子正确使用了该成语？',text:'以下哪个句子正确使用了 "'+idiom.ch+'"？',opts:opts2,ans:idiom.example,idiom:idiom});
+    }
+    if(selTypes.indexOf('fill-blank')>=0){
+      qs.push({type:'fill',label:'填空题：根据上下文填入成语',text:idiom.example.replace(idiom.ch,'＿＿＿＿'),ans:idiom.ch,idiom:idiom});
+    }
+    if(selTypes.indexOf('mc-english')>=0){
+      var enOpts=shuffle([idiom.ch].concat(distractors(idiom,'ch',3)));
+      qs.push({type:'mc-english',label:'选择题：根据英文选出成语',text:'Which idiom matches this English meaning?\n\n"'+idiom.en+'"',opts:enOpts,ans:idiom.ch,idiom:idiom});
+    }
+    if(selTypes.indexOf('story-fill')>=0){
+      var hint='（提示 Hint: '+idiom.en+'）';var storyText='【情景故事】\n\n'+hint+'\n\n请在横线上填入正确的成语：\n'+idiom.example.replace(idiom.ch,'___________');
+      qs.push({type:'fill',label:'情景题：根据故事情节填入成语',text:storyText,ans:idiom.ch,idiom:idiom});
+    }
+    if(selTypes.indexOf('mc-confusable')>=0){
+      var conf=findConfusable(idiom);
+      if(conf){
+        var confOpts=shuffle([idiom.meaning].concat(conf.map(function(x){return x.meaning;})));
+        qs.push({type:'mc-confusable',label:'辨析题：选出"'+idiom.ch+'"的正确意思',text:'"'+idiom.ch+'" 还是 "'+conf.map(function(x){return x.ch;}).join('" / "')+'"?\n\n请选出【'+idiom.ch+'】的正确意思：',opts:confOpts,ans:idiom.meaning,idiom:idiom,confusables:conf});
+      }
+    }
+  });
+  var shuffled=shuffle(qs);
+  return shuffled.slice(0,MAX_Q);
+}
+
+function startQuiz(){
+  var p=pool();
+  if(!p||p.length===0){alert('请先选择练习范围！\nPlease select at least one set.');return;}
+  queue=buildQ(p);
+  curQ=0;score=0;missed=[];streak=0;
+  $('score-live').textContent='准备好了！出发！🚀'; /* init */
+  $('home-screen').style.display='none';
+  $('home-top-btn').style.display='inline-block';
+  $('quiz-area').style.display='block';
+  $('score-screen').style.display='none';
+  showQ();
+}
+function updateScoreLive(){
+  var stars='';
+  for(var i=0;i<Math.min(score,5);i++) stars+='⭐';
+  var pct=curQ>0?Math.round(score/curQ*100):0;
+  var txt=curQ===0?'准备好了！出发！🚀':'✔ '+score+' 正确 / '+curQ+' 已答  ('+pct+'%)'+( stars?' '+stars:'');
+  $('score-live').textContent=txt;
+}
+function showQ(){
+  if(curQ>=queue.length){showScore();return;}
+  var q=queue[curQ];
+  curAns=q.ans;hintOn=false;
+  updateScoreLive(curQ);
+  $('prog-text').textContent='第 '+(curQ+1)+' 题 / 共 '+queue.length+' 题';
+  $('prog-bar').style.width=((curQ/queue.length)*100)+'%';
+  $('q-label').textContent=q.label;
+  $('q-text').textContent=q.text;
+  $('pinyin').style.display='none';
+  $('pinyin').textContent='拼音：'+q.idiom.py;
+
+  $('feedback').style.display='none';
+  $('next-btn').style.display='none';
+  var isFill=(q.type==='fill');
+  $('hint-btn').style.display=isFill?'inline':'none';
+  $('hint-btn').textContent='显示拼音提示';
+  var optsDiv=$('opts');
+  optsDiv.innerHTML='';
+  $('fill-in').style.display='none';
+  $('submit-btn').style.display='none';
+  if(!isFill){
+    q.opts.forEach(function(opt){
+      var btn=document.createElement('button');
+      btn.className='opt';
+      btn.textContent=opt;
+      btn.addEventListener('click',function(){checkMC(btn,opt);});
+      optsDiv.appendChild(btn);
+    });
+  } else {
+    $('fill-in').style.display='block';
+    $('submit-btn').style.display='block';
+    $('fill-in').value='';
+    $('fill-in').disabled=false;
+    $('submit-btn').disabled=false;
+    setTimeout(function(){$('fill-in').focus();},60);
+  }
+}
+function toggleHint(){
+  hintOn=!hintOn;
+  $('pinyin').style.display=hintOn?'block':'none';
+  $('hint-btn').textContent=hintOn?'隐藏拼音提示':'显示拼音提示';
+}
+function checkMC(btn,chosen){
+  document.querySelectorAll('.opt').forEach(function(b){b.disabled=true;});
+  var ok=(chosen===curAns);
+  btn.classList.add(ok?'correct':'wrong');
+  if(!ok){document.querySelectorAll('.opt').forEach(function(b){if(b.textContent===curAns)b.classList.add('correct');});}
+  showFeedback(ok);
+}
+function checkFill(){
+  var v=$('fill-in').value.trim();
+  if(!v)return;
+  $('fill-in').disabled=true;
+  $('submit-btn').disabled=true;
+  showFeedback(v===curAns);
+}
+function showFeedback(ok){
+  var q=queue[curQ];
+  if(ok){score++;streak++;}else{missed.push(q.idiom);streak=0;}
+  var streakBanner='';
+  if(streak>=1){
+    var bg,anim,emoji;
+    if(streak<=3){bg='linear-gradient(135deg,#9b96d4,#6b63b5)';anim='streak-pop .35s ease';emoji='👍';}
+    else if(streak<=5){bg='linear-gradient(135deg,#f59e0b,#e06c00)';anim='streak-pop .35s ease, streak-shake .4s ease .35s';emoji='🔥';}
+    else if(streak<=7){bg='linear-gradient(135deg,#ef4444,#c0392b)';anim='streak-pop .35s ease, streak-pulse .6s ease .35s 3';emoji='🔥🔥';}
+    else{bg='linear-gradient(135deg,#7c3aed,#db2777)';anim='streak-pop .35s ease, streak-glow .8s ease .35s infinite';emoji='🏆🔥';}
+    var stars='';for(var si=0;si<Math.min(streak,8);si++)stars+='⭐';
+    var smsgs=['👍 Nice!','Good!','Great!','On fire!','Incredible!','Unstoppable!','Legendary!','Phenomenal!','GODLIKE!'];
+    var smsg=streak+'连对！ '+smsgs[Math.min(streak-1,smsgs.length-1)];
+    streakBanner='<div class="streak-banner" style="background:'+bg+';animation:'+anim+'">'+emoji+' '+stars+'<br>'+smsg+'</div>';
+  }
+  // Update live score (curQ+1 = total answered including this one)
+  updateScoreLive(curQ+1);
+  var encourageOk=['太棒了！Great job! 🌟','答对了！You nailed it! 🎉','正确！Spot on! ✨','优秀！Excellent! 👏','答得好！Well done! 🌸'];
+  var encourageErr=['没关系，学了就会记住！No worries — now you know! 📖','加油！Keep going, you\'ve got this! 💪','差一点！So close — review and try again! 🔍','记下来，下次一定行！Note it down and you\'ll get it next time! 📝'];
+  var pick=ok?encourageOk[Math.floor(Math.random()*encourageOk.length)]:encourageErr[Math.floor(Math.random()*encourageErr.length)];
+  var fb=$('feedback');
+  fb.className='feedback '+(ok?'ok':'err');
+  fb.style.display='block';
+  fb.innerHTML=streakBanner+'<div class="fb-h">'+(ok?'✓ 正确！Correct!':'✗ 答错了 Not quite!')+'</div>'
+    +'<div class="fb-encourage">'+pick+'</div>'
+    +'<div class="fb-ch">'+q.idiom.ch+'</div>'
+    +'<div class="fb-py">'+q.idiom.py+'</div>'
+    +'<div class="fb-m">📖 '+q.idiom.meaning+'</div>'
+    +'<div class="fb-en">🔤 '+q.idiom.en+'</div>'
+    +'<div class="fb-e"><div class="fb-e-label">例句 Example:</div>'+q.idiom.example+'</div>';
+  $('next-btn').style.display='block';
+}
+function nextQ(){curQ++;showQ();}
+function showScore(){
+  $('quiz-area').style.display='none';
+  $('score-screen').style.display='block';
+  $('home-top-btn').style.display='inline-block';
+  var pct=Math.round(score/queue.length*100);
+  var msg=pct>=90?'太棒了！成绩优秀！🎉 Amazing — outstanding result!':pct>=70?'做得不错！继续加油！💪 Good effort — keep it up!':pct>=50?'还需努力，多加练习。📚 More practice needed — you\'re getting there!':'要多复习哦，加油！🔥 Review these idioms and try again — you can do it!';
+  $('score-num').innerHTML=score+'<small> / '+queue.length+'</small>';
+  $('score-msg').textContent='正确率 '+pct+'%  '+msg;
+  var ml=$('miss-list');
+  var uniq=[...new Map(missed.map(function(m){return[m.ch,m];})).values()];
+  $('weak-btn').style.display=uniq.length>0?'block':'none';
+  if(uniq.length===0){ml.innerHTML='<p style="color:#3B6D11;font-size:15px">🎊 全部答对！Perfect score!</p>';}
+  else{ml.innerHTML='<h3>需要复习的成语 Review these ('+uniq.length+')</h3>'+uniq.map(function(m){return'<div class="miss-item"><b>'+m.ch+'</b>　<span style="font-size:13px;color:var(--mu)">'+m.py+'</span><br>'+m.meaning+'<br><span style="color:var(--mu);font-size:13px">'+m.en+'</span></div>';}).join('');}
+
+}
+function goWeakSpots(){
+  // Find which sets contain the missed idioms
+  var uniq=[...new Map(missed.map(function(m){return[m.ch,m];})).values()];
+  if(!uniq.length){goHome();return;}
+  // Figure out IDIOMS indices of missed idioms
+  var missedIds=uniq.map(function(m){return IDIOMS.findIndex(function(x){return x.ch===m.ch;});});
+  // Uncheck all set checkboxes
+  var allCb=document.getElementById('all-sets-cb');
+  if(allCb) allCb.checked=false;
+  document.querySelectorAll('.set-cb input[type=checkbox]:not(#all-sets-cb)').forEach(function(cb){
+    cb.checked=false;
+  });
+  // Check the sets that contain at least one missed idiom
+  document.querySelectorAll('.set-cb input[type=checkbox]:not(#all-sets-cb)').forEach(function(cb){
+    var s=parseInt(cb.dataset.start), e=parseInt(cb.dataset.end);
+    var hasMatch=missedIds.some(function(idx){return idx>=s && idx<=e;});
+    if(hasMatch) cb.checked=true;
+  });
+  // Go home with those sets pre-selected
+  $('score-screen').style.display='none';
+  $('quiz-area').style.display='none';
+  $('home-screen').style.display='block';
+  // Scroll to top
+  window.scrollTo(0,0);
+}
+function goHome(){
+  $('score-screen').style.display='none';
+  $('quiz-area').style.display='none';
+  $('glossary-screen').style.display='none';
+  $('home-top-btn').style.display='none';
+  $('home-screen').style.display='block';
+}
+
+// ── Glossary ──────────────────────────────────────────
+function openGlossary(){
+  $('home-screen').style.display='none';
+  $('home-top-btn').style.display='inline-block';
+  $('glossary-screen').style.display='block';
+  // Reset filter to all
+  var allCb=document.getElementById('gloss-all-cb');
+  if(allCb) allCb.checked=true;
+  document.querySelectorAll('.gloss-cb').forEach(function(c){c.checked=false;});
+  renderGlossary(IDIOMS);
+  $('glossary-search').value='';
+  $('glossary-search').focus();
+}
+function renderGlossary(list){
+  var grid=$('flip-grid');
+  $('glossary-count').textContent=list.length+' 条成语';
+  grid.innerHTML=list.map(function(id,i){
+    return '<div class="flip-card" id="fc'+i+'" onclick="flipCard(this)">'
+      +'<div class="flip-inner">'
+      +'<div class="flip-front"><div class="flip-ch">'+id.ch+'</div><div class="flip-py-front">'+id.py+'</div></div>'
+      +'<div class="flip-back"><div class="flip-back-ch">'+id.ch+'</div>'
+      +'<div class="flip-back-py">'+id.py+'</div>'
+      +'<div class="flip-back-m">📖 '+id.meaning+'</div>'
+      +'<div class="flip-back-en">🔤 '+id.en+'</div>'
+      +'<div class="flip-back-ex">'+id.example+'</div>'
+      +'</div></div></div>';
+  }).join('');
+  // Make back panels height auto so long content shows
+  setTimeout(function(){
+    grid.querySelectorAll('.flip-card').forEach(function(c){
+      var back=c.querySelector('.flip-back');
+      if(back&&back.scrollHeight>80) c.classList.add('tall');
+    });
+  },0);
+}
+function flipCard(card){
+  card.classList.toggle('flipped');
+}
+
+// ── Glossary set filter ───────────────────────────────
+function glossFilteredList(){
+  var allCb=document.getElementById('gloss-all-cb');
+  if(allCb && allCb.checked) return IDIOMS;
+  var cbs=document.querySelectorAll('.gloss-cb');
+  var result=[];
+  cbs.forEach(function(cb){
+    if(cb.checked){
+      var s=parseInt(cb.dataset.start);
+      var e=parseInt(cb.dataset.end);
+      IDIOMS.forEach(function(id,i){if(i>=s&&i<=e) result.push(id);});
+    }
+  });
+  return result;
+}
+function applyGlossFilter(){
+  var q=document.getElementById('glossary-search').value.trim().toLowerCase();
+  var base=glossFilteredList();
+  if(!q){renderGlossary(base);return;}
+  var filtered=base.filter(function(id){
+    return id.ch.includes(q)||id.py.toLowerCase().includes(q)
+      ||id.meaning.includes(q)||id.en.toLowerCase().includes(q);
+  });
+  renderGlossary(filtered);
+}
+document.addEventListener('change',function(e){
+  var cb=e.target;
+  if(!cb.classList.contains('gloss-cb') && cb.id!=='gloss-all-cb') return;
+  var allCb=document.getElementById('gloss-all-cb');
+  var indCbs=document.querySelectorAll('.gloss-cb');
+  if(cb.id==='gloss-all-cb'){
+    if(cb.checked) indCbs.forEach(function(c){c.checked=false;});
+  } else {
+    if(cb.checked && allCb) allCb.checked=false;
+    var allInd=Array.from(indCbs).every(function(c){return c.checked;});
+    if(allInd && allCb){
+      allCb.checked=true;
+      indCbs.forEach(function(c){c.checked=false;});
+    }
+  }
+  applyGlossFilter();
+});
+$('glossary-btn').addEventListener('click',openGlossary);
+$('glossary-back-btn').addEventListener('click',goHome);
+$('glossary-search').addEventListener('input',function(){
+  applyGlossFilter();
+});
+
+</script>
+<div id="glossary-screen">
+  <div class="glossary-header">
+    <button class="back-btn" id="glossary-back-btn">← 返回</button>
+    <h2>词汇表 Glossary</h2>
+  </div>
+  <input class="glossary-search" id="glossary-search" type="search" placeholder="搜索成语、拼音或意思… Search idiom, pinyin or meaning">
+  <div class="glossary-count" id="glossary-count"></div>
+  <div class="gloss-filter" id="gloss-filter">
+    <div class="gloss-filter-label">筛选范围 Filter by set</div>
+    <div class="set-grid" id="gloss-set-grid">
+<label class="set-cb"><input type="checkbox" checked data-start="0" data-end="24" class="gloss-cb"><span>第1–25条<small>爱屋及乌 → 城门失火</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="25" data-end="49" class="gloss-cb"><span>第26–50条<small>痴人说梦 → 多多益善</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="50" data-end="74" class="gloss-cb"><span>第51–75条<small>耳濡目染 → 光明正大</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="75" data-end="99" class="gloss-cb"><span>第76–100条<small>海底捞针 → 近朱者赤</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="100" data-end="124" class="gloss-cb"><span>第101–125条<small>惊弓之鸟 → 了如指掌</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="125" data-end="149" class="gloss-cb"><span>第126–150条<small>临渴掘井 → 巧夺天工</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="150" data-end="174" class="gloss-cb"><span>第151–175条<small>青红皂白 → 损人利己</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="175" data-end="199" class="gloss-cb"><span>第176–200条<small>螳臂当车 → 乌烟瘴气</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="200" data-end="224" class="gloss-cb"><span>第201–225条<small>无可厚非 → 以卵击石</small></span></label>
+<label class="set-cb"><input type="checkbox" checked data-start="225" data-end="249" class="gloss-cb"><span>第226–250条<small>以身作则 → 坐享其成</small></span></label>
+<label class="set-cb all-cb"><input type="checkbox" id="gloss-all-cb" checked><span>全部 1–250条<small>显示所有成语</small></span></label>
+    </div>
+  </div>
+
+  <div class="flip-grid" id="flip-grid"></div>
+</div>
+</body>
+</html>
